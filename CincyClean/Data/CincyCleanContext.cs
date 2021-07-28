@@ -15,5 +15,9 @@ namespace CincyClean.Data
         }
 
         public DbSet<CincyClean.Models.Service> Service { get; set; }
+
+        public DbSet<CincyClean.Models.Request> Request { get; set; }
+
+        public DbSet<CincyClean.Models.Cleaner> Cleaner { get; set; }
     }
 }

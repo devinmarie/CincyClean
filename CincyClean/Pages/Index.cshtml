@@ -1,10 +1,91 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "CincyClean";
+    ViewData["Title"] = "Request Cleaning";
 }
 
-<div class="text-center">
-    <h1 class="display-4">CincyClean</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center bottom-margin-sm">
+    <h1>Request Cleaning</h1>
 </div>
+
+<div id="app">
+    <div class="row text-center bottom-padding-xlg">
+        <div class="col ">
+            <h5>First Name: </h5><input v-model="firstname" />
+        </div>
+        <div class="col">
+            <h5>Last Name: </h5><input v-model="lastname" />
+        </div>
+        <div class="col">
+            <h5>Phone Number: </h5><input v-model="phonenumber" placeholder="XXX-XXX-XXXX" />
+        </div>
+    </div>
+    <div class="row text-center bottom-padding-xlg">
+        <div class="col">
+            <div>
+                <h5>Address: </h5> <button id="geoClick" class="btn btn-outline-dark" v-on:click="getGeo">Auto-fill Address</button> <input v-model="address1" />
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col">
+            <button id="submitrequest" class="btn btn-dark">Submit Request</button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                // PLACE DATA PROPERTIES HERE
+                firstname: "",
+                lastname: "",
+                phonenumber: "",
+                address: "",
+                address1: ""
+            },
+            mounted: function () {
+                // PERFORM ANY ACTIONS WHEN THE PAGE LOADS HERE - SIMILAR TO JQUERY DOCUMENT.READY
+            },
+            methods: {
+                // ADD ANY METHODS (CLICK, SUBMIT EVENTS, ETC.)
+                getGeo: function () {
+                    var self = this;
+                    navigator.geolocation.getCurrentPosition(function (location) {
+                        var geocoder = new google.maps.Geocoder();
+                        var latLng = new google.maps.LatLng(
+                            location.coords.latitude,
+                            location.coords.longitude
+                        );
+                        geocoder.geocode(
+                            {
+                                latLng: latLng,
+                            },
+                            function (results, status) {
+                                for (var i = 0; i < results[0].address_components.length; i++) {
+                                    var address = results[0].address_components[i];
+                                    if (address.types[0] == "postal_code") {
+                                        self.address = address.long_name;
+                                        self.address1 = results[0].formatted_address;
+                                    }
+                                }
+                            }
+                        );
+                    })
+                }
+            },
+            computed: {
+                // CREATE ANY CALCULATED PROPERTIES HERE. THEY BEHAVE LIKE READ-ONLY DATA
+                sum: function () {
+                    var self = this;
+                    return self.firstname + " " + self.lastname;
+                }
+            }
+        });
+    </script>
+}
+

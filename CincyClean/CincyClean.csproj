@@ -17,4 +17,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Cleaners\" />
+    <Folder Include="Pages\Requests\" />
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>
