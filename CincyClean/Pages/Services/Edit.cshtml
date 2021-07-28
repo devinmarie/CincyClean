@@ -20,19 +20,14 @@
                 <span asp-validation-for="Service.ServiceName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Service.ServiceDesc" class="control-label"></label>
-                <input asp-for="Service.ServiceDesc" class="form-control" />
-                <span asp-validation-for="Service.ServiceDesc" class="text-danger"></span>
+                <label asp-for="Service.ServicePricePerHour" class="control-label"></label>
+                <input asp-for="Service.ServicePricePerHour" class="form-control" />
+                <span asp-validation-for="Service.ServicePricePerHour" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Service.ServicePrice" class="control-label"></label>
-                <input asp-for="Service.ServicePrice" class="form-control" />
-                <span asp-validation-for="Service.ServicePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Service.ServiceHours" class="control-label"></label>
-                <input asp-for="Service.ServiceHours" class="form-control" />
-                <span asp-validation-for="Service.ServiceHours" class="text-danger"></span>
+                <label asp-for="Service.HoursPerRoom" class="control-label"></label>
+                <input asp-for="Service.HoursPerRoom" class="form-control" />
+                <span asp-validation-for="Service.HoursPerRoom" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

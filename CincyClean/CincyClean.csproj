@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Cleaners\" />
+    <Folder Include="Pages\Requests\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

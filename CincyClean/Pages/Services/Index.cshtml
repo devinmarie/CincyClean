@@ -17,13 +17,10 @@
                 @Html.DisplayNameFor(model => model.Service[0].ServiceName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Service[0].ServiceDesc)
+                @Html.DisplayNameFor(model => model.Service[0].ServicePricePerHour)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Service[0].ServicePrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Service[0].ServiceHours)
+                @Html.DisplayNameFor(model => model.Service[0].HoursPerRoom)
             </th>
             <th></th>
         </tr>
@@ -35,13 +32,10 @@
                 @Html.DisplayFor(modelItem => item.ServiceName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ServiceDesc)
+                @Html.DisplayFor(modelItem => item.ServicePricePerHour)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ServicePrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ServiceHours)
+                @Html.DisplayFor(modelItem => item.HoursPerRoom)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ServiceId">Edit</a> |

@@ -7,16 +7,14 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 
-
 namespace CincyClean.Models
 {
-    public class Service
+    public class Cleaner
     {
         [Key]
-        public int ServiceId { get; set; }
-        public string ServiceName { get; set; }
-        public int ServicePricePerHour { get; set; }
-        public decimal HoursPerRoom { get; set; }
-        public List<Request> RequestService { get; set; }
+        public int CleanderId { get; set; }
+        public string CleanerName { get; set; }
+        public int PricePerHour { get; set; }
+        public List<Request> RequestCleaner { get; set; }
     }
 }

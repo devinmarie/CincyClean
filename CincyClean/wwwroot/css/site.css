@@ -85,14 +85,25 @@ body {
 .center {
     margin: 0;
     position: absolute;
-    top: 50%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6, p, button {
     font-family: Poppins;
 }
-.bottom-padding {
-    padding-bottom: 50px;
+.bottom-margin-xlg {
+    margin-bottom: 100px;
+}
+.bottom-margin-lg {
+    margin-bottom: 50px;
+}
+.bottom-margin-sm {
+    margin-bottom: 25px;
+}
+h1 {
+    color: #339966;
+}
+input {
+    margin-bottom: 25px;
 }
