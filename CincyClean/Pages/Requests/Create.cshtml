@@ -1,0 +1,99 @@
+﻿@page
+@model CincyClean.Pages.Requests.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Request</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Request.FirstName" class="control-label"></label>
+                <input asp-for="Request.FirstName" class="form-control" />
+                <span asp-validation-for="Request.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.LastName" class="control-label"></label>
+                <input asp-for="Request.LastName" class="form-control" />
+                <span asp-validation-for="Request.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.Phone" class="control-label"></label>
+                <input asp-for="Request.Phone" class="form-control" />
+                <span asp-validation-for="Request.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.Email" class="control-label"></label>
+                <input asp-for="Request.Email" class="form-control" />
+                <span asp-validation-for="Request.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.Address" class="control-label"></label>
+                <input asp-for="Request.Address" class="form-control" />
+                <span asp-validation-for="Request.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Request.VacuumFlag" /> @Html.DisplayNameFor(model => model.Request.VacuumFlag)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Request.DustFlag" /> @Html.DisplayNameFor(model => model.Request.DustFlag)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Request.MopFlag" /> @Html.DisplayNameFor(model => model.Request.MopFlag)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Request.KitchenFlag" /> @Html.DisplayNameFor(model => model.Request.KitchenFlag)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Request.BathroomFlag" /> @Html.DisplayNameFor(model => model.Request.BathroomFlag)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.Price" class="control-label"></label>
+                <input asp-for="Request.Price" class="form-control" />
+                <span asp-validation-for="Request.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Request.ConfirmPrice" /> @Html.DisplayNameFor(model => model.Request.ConfirmPrice)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.CleanerId" class="control-label"></label>
+                <input asp-for="Request.CleanerId" class="form-control" />
+                <span asp-validation-for="Request.CleanerId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Request.CompleteFlag" /> @Html.DisplayNameFor(model => model.Request.CompleteFlag)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using CincyClean.Data;
 using CincyClean.Models;
 
-namespace CincyClean.Pages.Services
+namespace CincyClean.Pages.Cleaners
 {
     public class CreateModel : PageModel
     {
@@ -25,7 +25,7 @@ namespace CincyClean.Pages.Services
         }
 
         [BindProperty]
-        public Service Service { get; set; }
+        public Cleaner Cleaner { get; set; }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://aka.ms/RazorPagesCRUD.
@@ -36,7 +36,7 @@ namespace CincyClean.Pages.Services
                 return Page();
             }
 
-            _context.Service.Add(Service);
+            _context.Cleaner.Add(Cleaner);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

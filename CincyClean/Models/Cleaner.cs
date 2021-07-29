@@ -11,8 +11,7 @@ namespace CincyClean.Models
 {
     public class Cleaner
     {
-        [Key]
-        public int CleanderId { get; set; }
+        public int CleanerId { get; set; }
         public string CleanerName { get; set; }
         public int PricePerHour { get; set; }
         public List<Request> RequestCleaner { get; set; }

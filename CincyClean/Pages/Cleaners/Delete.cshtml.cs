@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CincyClean.Data;
 using CincyClean.Models;
 
-namespace CincyClean.Pages.Services
+namespace CincyClean.Pages.Cleaners
 {
     public class DeleteModel : PageModel
     {
@@ -20,7 +20,7 @@ namespace CincyClean.Pages.Services
         }
 
         [BindProperty]
-        public Service Service { get; set; }
+        public Cleaner Cleaner { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,9 +29,9 @@ namespace CincyClean.Pages.Services
                 return NotFound();
             }
 
-            Service = await _context.Service.FirstOrDefaultAsync(m => m.ServiceId == id);
+            Cleaner = await _context.Cleaner.FirstOrDefaultAsync(m => m.CleanerId == id);
 
-            if (Service == null)
+            if (Cleaner == null)
             {
                 return NotFound();
             }
@@ -45,11 +45,11 @@ namespace CincyClean.Pages.Services
                 return NotFound();
             }
 
-            Service = await _context.Service.FindAsync(id);
+            Cleaner = await _context.Cleaner.FindAsync(id);
 
-            if (Service != null)
+            if (Cleaner != null)
             {
-                _context.Service.Remove(Service);
+                _context.Cleaner.Remove(Cleaner);
                 await _context.SaveChangesAsync();
             }
 

@@ -12,17 +12,21 @@ namespace CincyClean.Models
 {
     public class Request
     {
-        [Key]
         public int RequestId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
-        public DateTime PreferredDate { get; set; }
+        public bool VacuumFlag { get; set; }
+        public bool DustFlag { get; set; }
+        public bool MopFlag { get; set; }
+        public bool KitchenFlag { get; set; }
+        public bool BathroomFlag { get; set; }
         public int Price { get; set; }
         public bool ConfirmPrice { get; set; }
-        public List<Cleaner> Cleaners { get; set; }
-        public List<Service> Services { get; set; }
+        public Cleaner Cleaner { get; set; }
+        public int CleanerId { get; set; }
+        public bool CompleteFlag { get; set; }
     }
 }

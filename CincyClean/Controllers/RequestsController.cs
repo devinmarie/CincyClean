@@ -12,48 +12,48 @@ namespace CincyClean.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServicesController : ControllerBase
+    public class RequestsController : ControllerBase
     {
         private readonly CincyCleanContext _context;
 
-        public ServicesController(CincyCleanContext context)
+        public RequestsController(CincyCleanContext context)
         {
             _context = context;
         }
 
-        // GET: api/Services
+        // GET: api/Requests
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Service>>> GetService()
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequest()
         {
-            return await _context.Service.ToListAsync();
+            return await _context.Request.ToListAsync();
         }
 
-        // GET: api/Services/5
+        // GET: api/Requests/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Service>> GetService(int id)
+        public async Task<ActionResult<Request>> GetRequest(int id)
         {
-            var service = await _context.Service.FindAsync(id);
+            var request = await _context.Request.FindAsync(id);
 
-            if (service == null)
+            if (request == null)
             {
                 return NotFound();
             }
 
-            return service;
+            return request;
         }
 
-        // PUT: api/Services/5
+        // PUT: api/Requests/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutService(int id, Service service)
+        public async Task<IActionResult> PutRequest(int id, Request request)
         {
-            if (id != service.ServiceId)
+            if (id != request.RequestId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(service).State = EntityState.Modified;
+            _context.Entry(request).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace CincyClean.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ServiceExists(id))
+                if (!RequestExists(id))
                 {
                     return NotFound();
                 }
@@ -74,37 +74,37 @@ namespace CincyClean.Controllers
             return NoContent();
         }
 
-        // POST: api/Services
+        // POST: api/Requests
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Service>> PostService(Service service)
+        public async Task<ActionResult<Request>> PostRequest(Request request)
         {
-            _context.Service.Add(service);
+            _context.Request.Add(request);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetService", new { id = service.ServiceId }, service);
+            return CreatedAtAction("GetRequest", new { id = request.RequestId }, request);
         }
 
-        // DELETE: api/Services/5
+        // DELETE: api/Requests/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Service>> DeleteService(int id)
+        public async Task<ActionResult<Request>> DeleteRequest(int id)
         {
-            var service = await _context.Service.FindAsync(id);
-            if (service == null)
+            var request = await _context.Request.FindAsync(id);
+            if (request == null)
             {
                 return NotFound();
             }
 
-            _context.Service.Remove(service);
+            _context.Request.Remove(request);
             await _context.SaveChangesAsync();
 
-            return service;
+            return request;
         }
 
-        private bool ServiceExists(int id)
+        private bool RequestExists(int id)
         {
-            return _context.Service.Any(e => e.ServiceId == id);
+            return _context.Request.Any(e => e.RequestId == id);
         }
     }
 }

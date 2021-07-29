@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CincyClean.Data;
 using CincyClean.Models;
 
-namespace CincyClean.Pages.Services
+namespace CincyClean.Pages.Cleaners
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace CincyClean.Pages.Services
         }
 
         [BindProperty]
-        public Service Service { get; set; }
+        public Cleaner Cleaner { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,9 +30,9 @@ namespace CincyClean.Pages.Services
                 return NotFound();
             }
 
-            Service = await _context.Service.FirstOrDefaultAsync(m => m.ServiceId == id);
+            Cleaner = await _context.Cleaner.FirstOrDefaultAsync(m => m.CleanerId == id);
 
-            if (Service == null)
+            if (Cleaner == null)
             {
                 return NotFound();
             }
@@ -48,7 +48,7 @@ namespace CincyClean.Pages.Services
                 return Page();
             }
 
-            _context.Attach(Service).State = EntityState.Modified;
+            _context.Attach(Cleaner).State = EntityState.Modified;
 
             try
             {
@@ -56,7 +56,7 @@ namespace CincyClean.Pages.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ServiceExists(Service.ServiceId))
+                if (!CleanerExists(Cleaner.CleanerId))
                 {
                     return NotFound();
                 }
@@ -69,9 +69,9 @@ namespace CincyClean.Pages.Services
             return RedirectToPage("./Index");
         }
 
-        private bool ServiceExists(int id)
+        private bool CleanerExists(int id)
         {
-            return _context.Service.Any(e => e.ServiceId == id);
+            return _context.Cleaner.Any(e => e.CleanerId == id);
         }
     }
 }
