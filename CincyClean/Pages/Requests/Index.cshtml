@@ -1,0 +1,59 @@
+﻿@page
+@model CincyClean.Pages.Requests.IndexModel
+
+@{
+    ViewData["Title"] = "Requests";
+}
+
+<div class="text-center bottom-margin-sm">
+    <h1>Adjust or View Cleaning Requests</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].ConfirmPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].CleanerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].CompleteFlag)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Request) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConfirmPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CleanerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompleteFlag)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.RequestId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.RequestId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.RequestId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

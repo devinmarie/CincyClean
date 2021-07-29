@@ -4,6 +4,159 @@
     ViewData["Title"] = "Admin Portal";
 }
 
-<div class="text-center">
-    <h1>Admin Portal</h1>
+<div id="app">
+    <div class="text-center bottom-margin-lg">
+        <h1>Admin Portal</h1>
+    </div>
+    <div id="adminButtons" class="row text-center bottom-margin-lg">
+        <div class="col">
+            <a href="/Requests/Index" class="btn btn-outline-dark">Adjust Requests</a>
+        </div>
+        <div class="col">
+            <button class="btn btn-dark" v-on:click="showCleanerForm">Add Cleaner</button>
+        </div>
+        <div class="col">
+            <a href="/Cleaners/Index" class="btn btn-outline-dark">Update Cleaners</a>
+        </div>
+    </div>
+    <p id="testfunction"></p>
+    <form class="text-center bottom-margin-lg" v-show="cleanerForm == true">
+        <h4>Submit Cleaner Details</h4>
+        <div class="form-group">
+            <label for="name">Cleaner's Name</label>
+            <input type="text" class="form-control" id="name" />
+        </div>
+        <div class="form-group">
+            <label for="rate">Price Per Hour</label>
+            <input type="number" class="form-control" id="rate" />
+        </div>
+        <button class="btn btn-dark">Submit Cleaner</button>
+        <button class="btn btn-outline-dark" v-on:click="hideCleanerform">Done Adding Cleaners</button>
+    </form>
+    <div id="unassigned" class="text-center bottom-margin-sm">
+        <div class="row">
+            <div class="col">
+                <h4>Unassigned Requests</h4>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Price</th>
+                        <th>Cleaner</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="unassignedrow">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="assigned" class="text-center bottom-margin-sm">
+        <div class="row">
+            <div class="col">
+                <h4>Assigned Requests</h4>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Price</th>
+                        <th>Cleaner</th>
+                    </tr>
+                </thead>
+                <tbody id="assignedrow">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="complete" class="row text-center bottom-margin-lg">
+        <div class="col">
+            <h5>This will contain a table of the completed requests</h5>
+        </div>
+    </div>
+
+    {{ requests }}
 </div>
+
+@section Scripts
+{
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                // PLACE DATA PROPERTIES HERE
+                cleanerForm: false,
+                requests: []
+            },
+            mounted: function () {
+                // PERFORM ANY ACTIONS WHEN THE PAGE LOADS HERE - SIMILAR TO JQUERY DOCUMENT.READY
+                var self = this;
+                $.ajax({
+                    method: "GET",
+                    url: "api/Requests",
+                    dataType: "JSON",
+                    contentType: "application/json"
+                }).done(function (data) {
+                    self.requests = data;
+                    testingfunction(data);
+                }).fail(function () {
+                    console.log("requests did not get presented");
+                });
+
+                function testingfunction(data) {
+                    $.each(data, function (index, item) {
+                        if (item.confirmPrice == false) {
+                            var row = $("<tr id='unassign" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>"
+                                + item.price + "</td><td>" + item.confirmPrice + "</td><td>" + "Call About Price" +
+                                "</td><td>" + "<a href='/Requests/Details?id=" + item.requestId + "' class='btn btn-default'>See Request</a>" + "</td></tr>");
+                            $("#unassignedrow").append(row);
+                        }
+                        if (item.confirmPrice == true) {
+                            var row = $("<tr id='unassign" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>" 
+                                + item.price + "</td><td>" + item.confirmPrice + "</td><td>" + "<button class='btn btn-outline-dark'>Assign</button>" +
+                                "</td><td>" + "<a href='/Requests/Details?id="+item.requestId+"' class='btn btn-default'>See Request</a>"+"</td></tr>");
+                            $("#unassignedrow").append(row);
+                        }
+                    });
+                };
+
+                /*$.ajax({
+                    method: "POST",
+                    url: "api/Cleaners",
+                    dataType: "JSON",
+                    contentType: "application/json"
+                }).done(function (data) {
+                    self.requests = data;
+                }).fail(function () {
+                    console.log("requests did not get presented");
+                });*/
+            },
+            methods: {
+                showCleanerForm: function () {
+                    var self = this;
+                    self.cleanerForm = true;
+                },
+                hideCleanerform: function () {
+                    var self = this;
+                    self.cleanerForm = false;
+                }
+            },
+            computed: {
+                // CREATE ANY CALCULATED PROPERTIES HERE. THEY BEHAVE LIKE READ-ONLY DATA
+                //sum: function () {
+                //    var self = this;
+                //    return self.firstname + " " + self.lastname;
+                //}
+                
+            }
+        });
+    </script>
+}

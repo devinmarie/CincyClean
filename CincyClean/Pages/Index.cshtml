@@ -9,7 +9,8 @@
 </div>
 
 <div id="app">
-    <div class="row text-center bottom-padding-xlg">
+    
+    <div class="row text-center bottom-margin-sm">
         <div class="col ">
             <h5>First Name: </h5><input v-model="firstname" />
         </div>
@@ -20,7 +21,10 @@
             <h5>Phone Number: </h5><input v-model="phonenumber" placeholder="XXX-XXX-XXXX" />
         </div>
     </div>
-    <div class="row text-center bottom-padding-xlg">
+    <div class="row text-center bottom-margin-sm">
+        <div class="col">
+            <h5>Email: </h5><input v-model="email" placeholder="username@email.com" />
+        </div>
         <div class="col">
             <div>
                 <h5>Address: </h5> <button id="geoClick" class="btn btn-outline-dark" v-on:click="getGeo">Auto-fill Address</button> <input v-model="address1" />
@@ -45,11 +49,22 @@
                 firstname: "",
                 lastname: "",
                 phonenumber: "",
-                address: "",
-                address1: ""
+                address1: "",
+                requests: []
             },
             mounted: function () {
                 // PERFORM ANY ACTIONS WHEN THE PAGE LOADS HERE - SIMILAR TO JQUERY DOCUMENT.READY
+
+                $.ajax({
+                    method: "GET",
+                    url: "/api/roommates",
+                    dataType: "JSON",
+                    contentType: "application/json"
+                }).done(function (data) {
+                    this.requests = data;
+                }).fail(function () {
+                    console.log("requests did not get presented");
+                });
             },
             methods: {
                 // ADD ANY METHODS (CLICK, SUBMIT EVENTS, ETC.)
@@ -69,7 +84,6 @@
                                 for (var i = 0; i < results[0].address_components.length; i++) {
                                     var address = results[0].address_components[i];
                                     if (address.types[0] == "postal_code") {
-                                        self.address = address.long_name;
                                         self.address1 = results[0].formatted_address;
                                     }
                                 }
