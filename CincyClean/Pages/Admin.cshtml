@@ -13,25 +13,26 @@
             <a href="/Requests/Index" class="btn btn-outline-dark">Adjust Requests</a>
         </div>
         <div class="col">
-            <button class="btn btn-dark" v-on:click="showCleanerForm">Add Cleaner</button>
+            <button id="addCleaner" class="btn btn-dark" v-on:click="showCleanerForm">Add Cleaner</button>
         </div>
         <div class="col">
             <a href="/Cleaners/Index" class="btn btn-outline-dark">Update Cleaners</a>
         </div>
     </div>
     <p id="testfunction"></p>
-    <form class="text-center bottom-margin-lg" v-show="cleanerForm == true">
+    <form class="text-center bottom-margin-lg" v-on:submit.prevent.stop="submitCleaner" v-show="cleanerForm ==true">
         <h4>Submit Cleaner Details</h4>
         <div class="form-group">
-            <label for="name">Cleaner's Name</label>
-            <input type="text" class="form-control" id="name" />
+            <label>Cleaner's Name</label>
+            <input type="text" v-model="submitCleanerForm.cleanerName" class="form-control" />
         </div>
         <div class="form-group">
-            <label for="rate">Price Per Hour</label>
-            <input type="number" class="form-control" id="rate" />
+            <label>Price Per Hour</label>
+            <input type="text" v-model="submitCleanerForm.pricePerHour" class="form-control" />
         </div>
-        <button class="btn btn-dark">Submit Cleaner</button>
+        <button type="submit" class="btn btn-dark">Submit Cleaner</button>
         <button class="btn btn-outline-dark" v-on:click="hideCleanerform">Done Adding Cleaners</button>
+
     </form>
     <div id="unassigned" class="text-center bottom-margin-sm">
         <div class="row">
@@ -94,6 +95,10 @@
             data: {
                 // PLACE DATA PROPERTIES HERE
                 cleanerForm: false,
+                submitCleanerForm: {
+                    cleanerName: "",
+                    pricePerHour: 0
+                },
                 requests: []
             },
             mounted: function () {
@@ -106,12 +111,12 @@
                     contentType: "application/json"
                 }).done(function (data) {
                     self.requests = data;
-                    testingfunction(data);
+                    loadData(data);
                 }).fail(function () {
                     console.log("requests did not get presented");
                 });
-
-                function testingfunction(data) {
+                
+                function loadData(data) {
                     $.each(data, function (index, item) {
                         if (item.confirmPrice == false) {
                             var row = $("<tr id='unassign" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>"
@@ -128,16 +133,7 @@
                     });
                 };
 
-                /*$.ajax({
-                    method: "POST",
-                    url: "api/Cleaners",
-                    dataType: "JSON",
-                    contentType: "application/json"
-                }).done(function (data) {
-                    self.requests = data;
-                }).fail(function () {
-                    console.log("requests did not get presented");
-                });*/
+
             },
             methods: {
                 showCleanerForm: function () {
@@ -147,6 +143,23 @@
                 hideCleanerform: function () {
                     var self = this;
                     self.cleanerForm = false;
+                },
+                submitCleaner: function () {
+                    var self = this;
+                    var json = JSON.stringify(self.submitCleanerForm);
+                    $.ajax({
+                        method: "POST",
+                        url: "api/Cleaners",
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        data: json
+                    }).done(function (data) {
+                        console.log("Cleaner was submitted.");
+                        self.submitCleanerForm.cleanerName = "";
+                        self.submitCleanerForm.pricePerHour = null;
+                    }).fail(function () {
+                        console.log("Cleaner did not get posted.");
+                    });
                 }
             },
             computed: {
