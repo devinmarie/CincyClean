@@ -26,10 +26,6 @@
             <label>Cleaner's Name</label>
             <input type="text" v-model="submitCleanerForm.cleanerName" class="form-control" />
         </div>
-        <div class="form-group">
-            <label>Price Per Hour</label>
-            <input type="text" v-model="submitCleanerForm.pricePerHour" class="form-control" />
-        </div>
         <button type="submit" class="btn btn-dark">Submit Cleaner</button>
         <button class="btn btn-outline-dark" v-on:click="hideCleanerform">Done Adding Cleaners</button>
 
@@ -41,7 +37,7 @@
             </div>
         </div>
         <div class="row">
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -96,8 +92,7 @@
                 // PLACE DATA PROPERTIES HERE
                 cleanerForm: false,
                 submitCleanerForm: {
-                    cleanerName: "",
-                    pricePerHour: 0
+                    cleanerName: ""
                 },
                 requests: []
             },
@@ -118,16 +113,10 @@
                 
                 function loadData(data) {
                     $.each(data, function (index, item) {
-                        if (item.confirmPrice == false) {
+                        if (item.cleanerName == null) {
                             var row = $("<tr id='unassign" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>"
-                                + item.price + "</td><td>" + item.confirmPrice + "</td><td>" + "Call About Price" +
+                                + item.address + "</td><td>" + item.totalPrice + "</td><td>" + "<button class='btn btn-outline-dark'>Assign</button>" +
                                 "</td><td>" + "<a href='/Requests/Details?id=" + item.requestId + "' class='btn btn-default'>See Request</a>" + "</td></tr>");
-                            $("#unassignedrow").append(row);
-                        }
-                        if (item.confirmPrice == true) {
-                            var row = $("<tr id='unassign" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>" 
-                                + item.price + "</td><td>" + item.confirmPrice + "</td><td>" + "<button class='btn btn-outline-dark'>Assign</button>" +
-                                "</td><td>" + "<a href='/Requests/Details?id="+item.requestId+"' class='btn btn-default'>See Request</a>"+"</td></tr>");
                             $("#unassignedrow").append(row);
                         }
                     });
@@ -156,7 +145,6 @@
                     }).done(function (data) {
                         console.log("Cleaner was submitted.");
                         self.submitCleanerForm.cleanerName = "";
-                        self.submitCleanerForm.pricePerHour = null;
                     }).fail(function () {
                         console.log("Cleaner did not get posted.");
                     });

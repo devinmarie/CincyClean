@@ -40,48 +40,23 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Request.VacuumFlag" /> @Html.DisplayNameFor(model => model.Request.VacuumFlag)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Request.DustFlag" /> @Html.DisplayNameFor(model => model.Request.DustFlag)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Request.MopFlag" /> @Html.DisplayNameFor(model => model.Request.MopFlag)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Request.KitchenFlag" /> @Html.DisplayNameFor(model => model.Request.KitchenFlag)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Request.BathroomFlag" /> @Html.DisplayNameFor(model => model.Request.BathroomFlag)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Request.Price" class="control-label"></label>
-                <input asp-for="Request.Price" class="form-control" />
-                <span asp-validation-for="Request.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Request.ConfirmPrice" /> @Html.DisplayNameFor(model => model.Request.ConfirmPrice)
+                    <input class="form-check-input" asp-for="Request.IsCompleted" /> @Html.DisplayNameFor(model => model.Request.IsCompleted)
                 </label>
             </div>
             <div class="form-group">
                 <label asp-for="Request.CleanerId" class="control-label"></label>
-                <input asp-for="Request.CleanerId" class="form-control" />
-                <span asp-validation-for="Request.CleanerId" class="text-danger"></span>
+                <select asp-for="Request.CleanerId" class="form-control" asp-items="ViewBag.CleanerId">
+                    <option value=""></option>
+                </select>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Request.CompleteFlag" /> @Html.DisplayNameFor(model => model.Request.CompleteFlag)
-                </label>
+            <div class="form-group">
+                <label asp-for="Request.TotalPrice" class="control-label"></label>
+                <input asp-for="Request.TotalPrice" class="form-control" />
+                <span asp-validation-for="Request.TotalPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Request.ServiceId" class="control-label"></label>
+                <select asp-for="Request.ServiceId" class ="form-control" asp-items="ViewBag.ServiceId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

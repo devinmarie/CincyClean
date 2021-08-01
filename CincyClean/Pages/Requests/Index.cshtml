@@ -2,7 +2,7 @@
 @model CincyClean.Pages.Requests.IndexModel
 
 @{
-    ViewData["Title"] = "Requests";
+    ViewData["Title"] = "Index";
 }
 
 <div class="text-center bottom-margin-sm">
@@ -13,19 +13,31 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Request[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request[0].Email)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Request[0].Address)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Request[0].Price)
+                @Html.DisplayNameFor(model => model.Request[0].IsCompleted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Request[0].ConfirmPrice)
+                @Html.DisplayNameFor(model => model.Request[0].Cleaner)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Request[0].CleanerId)
+                @Html.DisplayNameFor(model => model.Request[0].TotalPrice)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Request[0].CompleteFlag)
+                @Html.DisplayNameFor(model => model.Request[0].Service)
             </th>
             <th></th>
         </tr>
@@ -34,19 +46,31 @@
 @foreach (var item in Model.Request) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.IsCompleted)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ConfirmPrice)
+                @Html.DisplayFor(modelItem => item.Cleaner.CleanerId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CleanerId)
+                @Html.DisplayFor(modelItem => item.TotalPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CompleteFlag)
+                @Html.DisplayFor(modelItem => item.Service.ServiceId)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.RequestId">Edit</a> |
