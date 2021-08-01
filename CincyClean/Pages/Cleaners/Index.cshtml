@@ -15,9 +15,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Cleaner[0].CleanerName)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cleaner[0].PricePerHour)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -26,9 +23,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.CleanerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PricePerHour)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.CleanerId">Edit</a> |

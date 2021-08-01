@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CincyClean.Data;
 using CincyClean.Models;
 
-namespace CincyClean.Pages.Requests
+namespace CincyClean.Pages.Services
 {
     public class DetailsModel : PageModel
     {
@@ -19,7 +19,7 @@ namespace CincyClean.Pages.Requests
             _context = context;
         }
 
-        public Request Request { get; set; }
+        public Service Service { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,11 +28,9 @@ namespace CincyClean.Pages.Requests
                 return NotFound();
             }
 
-            Request = await _context.Request
-                .Include(r => r.Cleaner)
-                .Include(r => r.Service).FirstOrDefaultAsync(m => m.RequestId == id);
+            Service = await _context.Service.FirstOrDefaultAsync(m => m.ServiceId == id);
 
-            if (Request == null)
+            if (Service == null)
             {
                 return NotFound();
             }

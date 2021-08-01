@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CincyClean.Data;
 using CincyClean.Models;
 
-namespace CincyClean.Pages.Requests
+namespace CincyClean.Pages.Services
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace CincyClean.Pages.Requests
         }
 
         [BindProperty]
-        public Request Request { get; set; }
+        public Service Service { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,16 +30,12 @@ namespace CincyClean.Pages.Requests
                 return NotFound();
             }
 
-            Request = await _context.Request
-                .Include(r => r.Cleaner)
-                .Include(r => r.Service).FirstOrDefaultAsync(m => m.RequestId == id);
+            Service = await _context.Service.FirstOrDefaultAsync(m => m.ServiceId == id);
 
-            if (Request == null)
+            if (Service == null)
             {
                 return NotFound();
             }
-           ViewData["CleanerId"] = new SelectList(_context.Cleaner, "CleanerId", "CleanerId");
-           ViewData["ServiceId"] = new SelectList(_context.Set<Service>(), "ServiceId", "ServiceId");
             return Page();
         }
 
@@ -52,7 +48,7 @@ namespace CincyClean.Pages.Requests
                 return Page();
             }
 
-            _context.Attach(Request).State = EntityState.Modified;
+            _context.Attach(Service).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +56,7 @@ namespace CincyClean.Pages.Requests
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RequestExists(Request.RequestId))
+                if (!ServiceExists(Service.ServiceId))
                 {
                     return NotFound();
                 }
@@ -73,9 +69,9 @@ namespace CincyClean.Pages.Requests
             return RedirectToPage("./Index");
         }
 
-        private bool RequestExists(int id)
+        private bool ServiceExists(int id)
         {
-            return _context.Request.Any(e => e.RequestId == id);
+            return _context.Service.Any(e => e.ServiceId == id);
         }
     }
 }
