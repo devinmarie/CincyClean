@@ -37,6 +37,7 @@ namespace CincyClean
             services.AddMvc();
 
             services.AddGttMem<CincyCleanContext>("f2c6036c-1365-4e35-9e28-420e34dd7672");
+            //https://uc-dataviewer.azurewebsites.net/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
