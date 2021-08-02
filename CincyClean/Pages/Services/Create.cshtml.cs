@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using CincyClean.Data;
 using CincyClean.Models;
 
-namespace CincyClean.Pages.Requests
+namespace CincyClean.Pages.Services
 {
     public class CreateModel : PageModel
     {
@@ -21,13 +21,11 @@ namespace CincyClean.Pages.Requests
 
         public IActionResult OnGet()
         {
-        ViewData["CleanerId"] = new SelectList(_context.Cleaner, "CleanerId", "CleanerId");
-        ViewData["ServiceId"] = new SelectList(_context.Service, "ServiceId", "ServiceId");
             return Page();
         }
 
         [BindProperty]
-        public Request Request { get; set; }
+        public Service Service { get; set; }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://aka.ms/RazorPagesCRUD.
@@ -38,7 +36,7 @@ namespace CincyClean.Pages.Requests
                 return Page();
             }
 
-            _context.Request.Add(Request);
+            _context.Service.Add(Service);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

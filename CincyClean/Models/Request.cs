@@ -18,15 +18,12 @@ namespace CincyClean.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
-        public bool VacuumFlag { get; set; }
-        public bool DustFlag { get; set; }
-        public bool MopFlag { get; set; }
-        public bool KitchenFlag { get; set; }
-        public bool BathroomFlag { get; set; }
-        public int Price { get; set; }
-        public bool ConfirmPrice { get; set; }
+        public bool IsCompleted { get; set; }
         public Cleaner Cleaner { get; set; }
-        public int CleanerId { get; set; }
-        public bool CompleteFlag { get; set; }
+        public int? CleanerId { get; set; }
+        public decimal TotalPrice { get; set; }
+        public Service Service { get; set; }
+        public int ServiceId { get; set; }
+
     }
 }

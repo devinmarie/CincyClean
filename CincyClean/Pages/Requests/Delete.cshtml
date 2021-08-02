@@ -43,58 +43,28 @@
             @Html.DisplayFor(model => model.Request.Address)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.VacuumFlag)
+            @Html.DisplayNameFor(model => model.Request.IsCompleted)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.VacuumFlag)
+            @Html.DisplayFor(model => model.Request.IsCompleted)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.DustFlag)
+            @Html.DisplayNameFor(model => model.Request.Cleaner)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.DustFlag)
+            @Html.DisplayFor(model => model.Request.Cleaner.CleanerId)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.MopFlag)
+            @Html.DisplayNameFor(model => model.Request.TotalPrice)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.MopFlag)
+            @Html.DisplayFor(model => model.Request.TotalPrice)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.KitchenFlag)
+            @Html.DisplayNameFor(model => model.Request.Service)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.KitchenFlag)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.BathroomFlag)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.BathroomFlag)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.ConfirmPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.ConfirmPrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.CleanerId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.CleanerId)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request.CompleteFlag)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request.CompleteFlag)
+            @Html.DisplayFor(model => model.Request.Service.ServiceId)
         </dd>
     </dl>
     

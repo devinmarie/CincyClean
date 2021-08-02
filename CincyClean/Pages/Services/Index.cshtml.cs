@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CincyClean.Data;
 using CincyClean.Models;
 
-namespace CincyClean.Pages.Requests
+namespace CincyClean.Pages.Services
 {
     public class IndexModel : PageModel
     {
@@ -19,13 +19,11 @@ namespace CincyClean.Pages.Requests
             _context = context;
         }
 
-        public IList<Request> Request { get;set; }
+        public IList<Service> Service { get;set; }
 
         public async Task OnGetAsync()
         {
-            Request = await _context.Request
-                .Include(r => r.Cleaner)
-                .Include(r => r.Service).ToListAsync();
+            Service = await _context.Service.ToListAsync();
         }
     }
 }

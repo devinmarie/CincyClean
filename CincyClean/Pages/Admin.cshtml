@@ -106,6 +106,7 @@
                     contentType: "application/json"
                 }).done(function (data) {
                     self.requests = data;
+                    console.log(data);
                     testingfunction(data);
                 }).fail(function () {
                     console.log("requests did not get presented");
@@ -113,13 +114,12 @@
 
                 function testingfunction(data) {
                     $.each(data, function (index, item) {
-                        if (item.confirmPrice == false) {
+                        if (!item.cleaner) {
                             var row = $("<tr id='unassign" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>"
-                                + item.price + "</td><td>" + item.confirmPrice + "</td><td>" + "Call About Price" +
+                                + item.address + "</td><td>" + item.totalPrice + "</td><td>" + "item.cleaner" +
                                 "</td><td>" + "<a href='/Requests/Details?id=" + item.requestId + "' class='btn btn-default'>See Request</a>" + "</td></tr>");
                             $("#unassignedrow").append(row);
-                        }
-                        if (item.confirmPrice == true) {
+                        } else if (item.cleaner) {
                             var row = $("<tr id='unassign" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>" 
                                 + item.price + "</td><td>" + item.confirmPrice + "</td><td>" + "<button class='btn btn-outline-dark'>Assign</button>" +
                                 "</td><td>" + "<a href='/Requests/Details?id="+item.requestId+"' class='btn btn-default'>See Request</a>"+"</td></tr>");

@@ -9,31 +9,47 @@
 </div>
 
 <div id="app">
-    
+
     <div class="row text-center bottom-margin-sm">
         <div class="col ">
-            <h5>First Name: </h5><input v-model="firstname" />
+            <label for="firstname">First Name: </label><input type="text" id="firstname" v-model="firstname" />
         </div>
         <div class="col">
-            <h5>Last Name: </h5><input v-model="lastname" />
+            <label for="lastname">Last Name: </label><input type="text" id="lastname" v-model="lastname" />
         </div>
         <div class="col">
-            <h5>Phone Number: </h5><input v-model="phonenumber" placeholder="XXX-XXX-XXXX" />
+            <label for="phonenumber">Phone Number: </label><input type="text" id="phonenumber" v-model="phonenumber" placeholder="XXX-XXX-XXXX" />
         </div>
     </div>
     <div class="row text-center bottom-margin-sm">
         <div class="col">
-            <h5>Email: </h5><input v-model="email" placeholder="username@email.com" />
+            <label for="email">Email: </label><input type="email" id="email" v-model="email" placeholder="username@email.com" />
         </div>
         <div class="col">
             <div>
-                <h5>Address: </h5> <button id="geoClick" class="btn btn-outline-dark" v-on:click="getGeo">Auto-fill Address</button> <input v-model="address1" />
+                <label for="address">Address: </label> <button id="geoClick" class="btn btn-outline-dark" v-on:click="getGeo">Auto-fill Address</button> <input type="text" id="address" v-model="address" />
             </div>
         </div>
     </div>
+    <div class="row text-center bottom-margin-sm">
+        <div class="col">
+            <label for="service">Choose your Service: </label>
+            <select v-model="service" v-on:change="modifyPrice">
+                <option v-for="option in serviceOptions" v-bind:value="option.value">
+                    {{ option.text }}
+                </option>
+            </select>
+        </div>
+        <div class="col">
+            <div>
+                <label for="price">Price: </label> <input type="text" id="price" v-model="price" readonly />
+            </div>
+        </div>
+    </div>
+
     <div class="row text-center">
         <div class="col">
-            <button id="submitrequest" class="btn btn-dark">Submit Request</button>
+            <button id="submitrequest" class="btn btn-dark" v-on:click="submitRequest">Submit Request</button>
         </div>
     </div>
 </div>
@@ -49,19 +65,26 @@
                 firstname: "",
                 lastname: "",
                 phonenumber: "",
-                address1: "",
+                email: "",
+                address: "",
+                price: "",
+                service: "",
+                serviceOptions: [],
+                servicePrices: [],
                 requests: []
             },
             mounted: function () {
                 // PERFORM ANY ACTIONS WHEN THE PAGE LOADS HERE - SIMILAR TO JQUERY DOCUMENT.READY
-
                 $.ajax({
                     method: "GET",
-                    url: "/api/roommates",
+                    url: "/api/Services",
                     dataType: "JSON",
                     contentType: "application/json"
                 }).done(function (data) {
-                    this.requests = data;
+                    $.each(data, function (index, item) {
+                        app.serviceOptions.push({ text: item.serviceName, value: item.serviceId });
+                        app.servicePrices[item.serviceId] = item.pricePerService;
+                    });
                 }).fail(function () {
                     console.log("requests did not get presented");
                 });
@@ -84,13 +107,52 @@
                                 for (var i = 0; i < results[0].address_components.length; i++) {
                                     var address = results[0].address_components[i];
                                     if (address.types[0] == "postal_code") {
-                                        self.address1 = results[0].formatted_address;
+                                        self.address = results[0].formatted_address;
                                     }
                                 }
                             }
                         );
                     })
+                },
+                modifyPrice: function () {
+                    var self = this;
+                    var value = this.service;
+                    app.price = app.servicePrices[value];
+                },
+
+                submitRequest: function () {
+                    data = {
+                        firstname: app.firstname,
+                        lastname: app.lastname,
+                        phone: app.phonenumber,
+                        email: app.email,
+                        address: app.address,
+                        totalPrice: app.price,
+                        serviceId: app.service
+                    }
+                    $.ajax({
+                        method: "POST",
+                        url: "/api/Requests",
+                        data: JSON.stringify(data),
+                        dataType: "JSON",
+                        contentType: "application/json"
+                    }).done(function (data) {
+                        app.firstname = "";
+                        app.lastname = "";
+                        app.phonenumber = "";
+                        app.email = "";
+                        app.address = "";
+                        app.price = "";
+                        app.service = "";
+                        $('#submitrequest').parent('.col').append('<div class="col" id="successMsg">Request submitted successfully!</div>');
+                        $('#successMsg').fadeOut('xslow', function () {
+                            $(this).remove();
+                        })
+                    }).fail(function () {
+                        console.log("requests did not get presented");
+                    });
                 }
+
             },
             computed: {
                 // CREATE ANY CALCULATED PROPERTIES HERE. THEY BEHAVE LIKE READ-ONLY DATA
@@ -102,4 +164,3 @@
         });
     </script>
 }
-

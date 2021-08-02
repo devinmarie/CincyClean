@@ -2,21 +2,19 @@
 @model CincyClean.Pages.Cleaners.IndexModel
 
 @{
-    ViewData["Title"] = "Cleaners";
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center bottom-margin-sm">
-    <h1 class="bottom-margin-sm">Employeed Cleaners</h1>
-    <a href="/Cleaners/Create" class="btn btn-outline-dark">Add New Cleaner</a>
-</div>
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Cleaner[0].CleanerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cleaner[0].PricePerHour)
             </th>
             <th></th>
         </tr>
@@ -26,9 +24,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.CleanerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PricePerHour)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.CleanerId">Edit</a> |
