@@ -2,13 +2,14 @@
 @model CincyClean.Pages.Cleaners.IndexModel
 
 @{
-    ViewData["Title"] = "Cleaners";
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center bottom-margin-sm">
-    <h1 class="bottom-margin-sm">Employeed Cleaners</h1>
-    <a href="/Cleaners/Create" class="btn btn-outline-dark">Add New Cleaner</a>
-</div>
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
