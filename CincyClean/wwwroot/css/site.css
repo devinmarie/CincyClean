@@ -107,3 +107,21 @@ h1 {
 input {
     margin-bottom: 25px;
 }
+
+@media (min-width: 901px) {
+    .desktop {
+        display: block;
+    }
+    .mobile {
+        display: none;
+    }
+}
+@media (max-width: 900px) {
+    .desktop {
+        display: none;
+    }
+
+    .mobile {
+        display:block
+    }
+}
