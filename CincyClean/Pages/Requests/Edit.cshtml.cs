@@ -38,8 +38,8 @@ namespace CincyClean.Pages.Requests
             {
                 return NotFound();
             }
-           ViewData["CleanerId"] = new SelectList(_context.Cleaner, "CleanerId", "CleanerId");
-           ViewData["ServiceId"] = new SelectList(_context.Service, "ServiceId", "ServiceId");
+            ViewData["CleanerId"] = new SelectList(_context.Cleaner, "CleanerId", "CleanerId");
+            ViewData["ServiceId"] = new SelectList(_context.Set<Service>(), "ServiceId", "ServiceId");
             return Page();
         }
 
