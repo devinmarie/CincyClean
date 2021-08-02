@@ -13,6 +13,6 @@ namespace CincyClean.Models
     {
         public int CleanerId { get; set; }
         public string CleanerName { get; set; }
-        public List<Request> RequestCleaner { get; set; }
+        public List<Request> Requests { get; set; }
     }
 }

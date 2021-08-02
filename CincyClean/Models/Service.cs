@@ -7,11 +7,10 @@ namespace CincyClean.Models
 {
     public class Service
     {
-            public int ServiceId { get; set; }
-            public string ServiceName { get; set; }
-            public decimal PricePerService { get; set; }
-            public List<Request> Requests { get; set; }
+        public int ServiceId { get; set; }
+        public string ServiceName { get; set; }
+        public decimal PricePerService { get; set; }
+        public List<Request> Requests { get; set; }
 
-        }
-
+    }
 }

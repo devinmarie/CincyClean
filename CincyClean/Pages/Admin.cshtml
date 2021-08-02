@@ -130,11 +130,39 @@
                     cleanerId: null
                     //This has to be an integer in order to work.
                 },
-                requests: []
+                requests: [],
+                services: [],
+                cleaners:[]
             },
             mounted: function () {
                 // PERFORM ANY ACTIONS WHEN THE PAGE LOADS HERE - SIMILAR TO JQUERY DOCUMENT.READY
                 var self = this;
+                $.ajax({
+                    method: "GET",
+                    url: "api/Services",
+                    dataType: "JSON",
+                    contentType: "application/json"
+                }).done(function (data) {
+                    $.each(data, function (index, item) {
+                        self.services[item.serviceId] = item;
+                    });
+                }).fail(function () {
+                    console.log("services did not get presented");
+                });
+
+                $.ajax({
+                    method: "GET",
+                    url: "api/Cleaners",
+                    dataType: "JSON",
+                    contentType: "application/json"
+                }).done(function (data) {
+                    $.each(data, function (index, item) {
+                        self.cleaners[item.cleanerId] = item;
+                    });
+                }).fail(function () {
+                    console.log("cleaners did not get presented");
+                });
+
                 $.ajax({
                     method: "GET",
                     url: "api/Requests",
@@ -151,6 +179,10 @@
                     var self = this;
                     var count = 0;
                     $.each(data, function (index, item) {
+                        var serviceName = item.serviceId;
+                        if (item.serviceId in app.services)
+                            serviceName = app.services[item.serviceId].serviceName;
+
                         if (item.cleanerId == null && item.isCompleted == false) {
                             var row = $("<tr unassignedrow-id='" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>"
                                 + item.address + "</td><td>" + item.totalPrice + "</td><td>" +
@@ -159,14 +191,22 @@
                             $("#unassignedrow").append(row);
                         }
                         if (item.cleanerId != null && item.isCompleted == false) {
+                            var cleanerName = item.cleanerId;
+                            if (item.cleanerId in app.cleaners) {
+                                cleanerName = app.cleaners[item.cleanerId].cleanerName
+                            }
                             var row = $("<tr assignedrow-id='" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>"
-                                + item.totalPrice + "</td><td>" + item.serviceId + "</td><td>" + item.cleanerId + "</td><td>"
+                                + item.totalPrice + "</td><td>" + serviceName + "</td><td>" + cleanerName + "</td><td>"
                                 + "<button markcomplete-id ='" + item.requestId + "' class='btn btn-outline-dark mark-complete'>Complete</button>" + "</td></tr>");
                             $("#assignedrow").append(row);
                         }
                         if (item.isCompleted == true) {
+                            var cleanerName = item.cleanerId;
+                            if (item.cleanerId in app.cleaners) {
+                                cleanerName = app.cleaners[item.cleanerId].cleanerName
+                            }
                             var row = $("<tr><td>" + item.firstName + " " + item.lastName + "</td><td>"
-                                + item.totalPrice + "</td><td>" + item.serviceId + "</td><td>" + item.cleanerId + "</td></tr>");
+                                + item.totalPrice + "</td><td>" + serviceName + "</td><td>" + cleanerName + "</td></tr>");
                             $("#completerow").append(row);
                             count = count + 1;
                             totalrequests = "Completed Total: " + count; 
