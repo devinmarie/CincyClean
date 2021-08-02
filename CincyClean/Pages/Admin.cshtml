@@ -131,6 +131,7 @@
                     //This has to be an integer in order to work.
                 },
                 requests: [],
+                requestskeyed: [],
                 services: [],
                 cleaners:[]
             },
@@ -171,6 +172,9 @@
                 }).done(function (data) {
                     self.requests = data;
                     loadData(data);
+                    $.each(data, function (index, item) {
+                        self.requestskeyed[item.requestId] = item;
+                    });
                 }).fail(function () {
                     console.log("requests did not get presented");
                 });
@@ -216,7 +220,37 @@
                     $("#assignedrow").on('click', 'button.mark-complete', function () {
                         var self = this;
                         var id = $(this).parents("tr").attr('assignedrow-id');
-                        markComplete(id);
+                        var keyedId = parseInt(id);
+                        if (keyedId in app.requestskeyed) {
+                            singlerequest = app.requestskeyed[keyedId]
+                        }
+                        console.log(singlerequest);
+                        console.log(singlerequest.firstName);
+                        var completeData = {
+                            requestId: parseInt(id),
+                            firstName: singlerequest.firstName,
+                            lastName: singlerequest.lastName,
+                            phone: singlerequest.phone,
+                            email: singlerequest.email,
+                            address: singlerequest.address,
+                            isCompleted: true,
+                            cleanerId: singlerequest.cleanerId,
+                            totalPrice: singlerequest.totalPrice,
+                            serviceId: singlerequest.serviceId
+                        };
+                        var json = JSON.stringify(completeData);
+                        $.ajax({
+                            method: "PUT",
+                            url: "api/Requests/" + id,
+                            dataType: "JSON",
+                            contentType: "application/json",
+                            data: json
+                        }).done(function (data) {
+                            console.log("Request marked complete.");
+                            location.reload(true);
+                        }).fail(function () {
+                            console.log("Request could not be completed.");
+                        });
                         return false;
                     });
                     $("#unassignedrow").on('click', 'button.assign-cleaner', function () {
@@ -226,26 +260,6 @@
                         $("#assignForm").show();
                         return false;
                     });
-                };
-                function markComplete(id) {
-                    var completeData = {
-                        requestId: parseInt(id),
-                        isCompleted: true
-                    };
-                    var json = JSON.stringify(completeData);
-                    $.ajax({
-                        method: "PUT",
-                        url: "api/Requests/" + id,
-                        dataType: "JSON",
-                        contentType: "application/json",
-                        data: json
-                    }).done(function (data) {
-                        console.log("Request marked complete.");
-                        console.log(data);
-                    }).fail(function () {
-                        console.log("Request could not be completed.");
-                    });
-                    $("#test").text(id);
                 };
                 function assignCleaner(id) {
                     $("#assignCleanerRequestId").text(id);
