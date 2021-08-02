@@ -5,8 +5,11 @@
 }
 
 <div id="app">
-    <div class="text-center bottom-margin-lg">
+    <div class="text-center bottom-margin-lg desktop">
         <h1>Admin Portal</h1>
+    </div>
+    <div class="text-center bottom-margin-lg mobile">
+        <h1>Mobile Admin Portal</h1>
     </div>
     <div id="adminButtons" class="row text-center bottom-margin-lg">
         <div class="col">
@@ -19,7 +22,6 @@
             <a href="/Cleaners/Index" class="btn btn-outline-dark">Update Cleaners</a>
         </div>
     </div>
-    <p id="testfunction"></p>
     <form class="text-center bottom-margin-lg" v-on:submit.prevent.stop="submitCleaner" v-show="cleanerForm ==true">
         <h4>Submit Cleaner Details</h4>
         <div class="form-group">
@@ -27,8 +29,7 @@
             <input type="text" v-model="submitCleanerForm.cleanerName" class="form-control" />
         </div>
         <button type="submit" class="btn btn-dark">Submit Cleaner</button>
-        <button class="btn btn-outline-dark" v-on:click="hideCleanerform">Done Adding Cleaners</button>
-
+        <button type="button" class="btn btn-outline-dark" v-on:click="hideCleanerform">Done Adding Cleaners</button>
     </form>
     <div id="unassigned" class="text-center bottom-margin-sm">
         <div class="row">
@@ -53,6 +54,16 @@
             </table>
         </div>
     </div>
+    <form id="assignForm" style="display:none" class="text-center bottom-margin-lg" v-on:submit.prevent.stop="assignCleaner">
+        <h4>Assign Cleaner</h4>
+        <div class="form-group">
+            <label>Request</label>
+            <label id="assignCleanerRequestId"></label>
+            <label>Cleaner's Id</label>
+            <input type="number" v-model="assignCleanerForm.cleanerId" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-dark">Assign Cleaner</button>
+    </form>
     <div id="assigned" class="text-center bottom-margin-sm">
         <div class="row">
             <div class="col">
@@ -64,9 +75,10 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Address</th>
                         <th>Price</th>
+                        <th>Service Level</th>
                         <th>Cleaner</th>
+                        <th>Mark Complete</th>
                     </tr>
                 </thead>
                 <tbody id="assignedrow">
@@ -74,13 +86,32 @@
             </table>
         </div>
     </div>
-    <div id="complete" class="row text-center bottom-margin-lg">
-        <div class="col">
-            <h5>This will contain a table of the completed requests</h5>
+    <p id="test"></p>
+    <div id="complete" class="text-center bottom-margin-sm">
+        <div class="row">
+            <div class="col">
+                <h4>Completed Requests</h4>
+                <h5 class="brandcolor" id="totalRequests"></h5>
+            </div>
+        </div>
+        <div class="row desktop">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Service Level</th>
+                        <th>Cleaner</th>
+                    </tr>
+                </thead>
+                <tbody id="completerow">
+                </tbody>
+            </table>
+        </div>
+        <div class="row mobile">
+            <p>All requests can be viewed on desktop app.</p>
         </div>
     </div>
-
-    {{ requests }}
 </div>
 
 @section Scripts
@@ -91,6 +122,7 @@
             data: {
                 // PLACE DATA PROPERTIES HERE
                 cleanerForm: false,
+                assignForm: false,
                 submitCleanerForm: {
                     cleanerName: ""
                 },
@@ -144,11 +176,13 @@
                 });
                 
                 function loadData(data) {
+                    var self = this;
+                    var count = 0;
                     $.each(data, function (index, item) {
                         var serviceName = item.serviceId;
                         if (item.serviceId in app.services)
                             serviceName = app.services[item.serviceId].serviceName;
-                        
+
                         if (item.cleanerId == null && item.isCompleted == false) {
                             var row = $("<tr unassignedrow-id='" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>"
                                 + item.address + "</td><td>" + item.totalPrice + "</td><td>" +
@@ -179,9 +213,43 @@
                             $("#totalRequests").text(totalrequests);
                         }
                     });
+                    $("#assignedrow").on('click', 'button.mark-complete', function () {
+                        var self = this;
+                        var id = $(this).parents("tr").attr('assignedrow-id');
+                        markComplete(id);
+                        return false;
+                    });
+                    $("#unassignedrow").on('click', 'button.assign-cleaner', function () {
+                        var self = this;
+                        var id = $(this).parents("tr").attr('unassignedrow-id');
+                        assignCleaner(id);
+                        $("#assignForm").show();
+                        return false;
+                    });
                 };
-
-
+                function markComplete(id) {
+                    var completeData = {
+                        requestId: parseInt(id),
+                        isCompleted: true
+                    };
+                    var json = JSON.stringify(completeData);
+                    $.ajax({
+                        method: "PUT",
+                        url: "api/Requests/" + id,
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        data: json
+                    }).done(function (data) {
+                        console.log("Request marked complete.");
+                        console.log(data);
+                    }).fail(function () {
+                        console.log("Request could not be completed.");
+                    });
+                    $("#test").text(id);
+                };
+                function assignCleaner(id) {
+                    $("#assignCleanerRequestId").text(id);
+                };
             },
             methods: {
                 showCleanerForm: function () {
@@ -207,15 +275,29 @@
                     }).fail(function () {
                         console.log("Cleaner did not get posted.");
                     });
+                },
+                assignCleaner: function () {
+                    var self = this;
+                    var data = {
+                        cleanerId: parseInt(self.assignCleanerForm.cleanerId)
+                    }
+                    var json = JSON.stringify(data);
+                    var id = $("#assignCleanerRequestId").text();
+                    $.ajax({
+                        method: "PUT",
+                        url: "api/Requests/" + id,
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        data: json
+                    }).done(function (data) {
+                        console.log("Cleaner was submitted.");
+                        $("#assignForm").hide();
+                    }).fail(function () {
+                        console.log("Cleaner did not get posted.");
+                    });
                 }
             },
-            computed: {
-                // CREATE ANY CALCULATED PROPERTIES HERE. THEY BEHAVE LIKE READ-ONLY DATA
-                //sum: function () {
-                //    var self = this;
-                //    return self.firstname + " " + self.lastname;
-                //}
-                
+            computed: {              
             }
         });
     </script>
