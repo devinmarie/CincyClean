@@ -9,72 +9,122 @@
 </div>
 
 <div id="app">
-
-    <div class="row text-center bottom-margin-sm">
-        <div class="col ">
-            <label for="firstname">First Name: </label><input type="text" id="firstname" v-model="firstname" />
-        </div>
-        <div class="col">
-            <label for="lastname">Last Name: </label><input type="text" id="lastname" v-model="lastname" />
-        </div>
-        <div class="col">
-            <label for="phonenumber">Phone Number: </label><input type="text" id="phonenumber" v-model="phonenumber" placeholder="XXX-XXX-XXXX" />
-        </div>
-    </div>
-    <div class="row text-center bottom-margin-sm">
-        <div class="col">
-            <label for="email">Email: </label><input type="email" id="email" v-model="email" placeholder="username@email.com" />
-        </div>
-        <div class="col">
-            <div>
-                <label for="address">Address: </label> <button id="geoClick" class="btn btn-outline-dark" v-on:click="getGeo">Auto-fill Address</button> <input type="text" id="address" v-model="address" />
+    <form class="needs-validation" novalidate v-on:submit.prevent="checkForm">
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label for="firstname">First Name: </label>
+                <input type="text" class="form-control" id="firstname" v-model="firstname" required />
+                <div class="invalid-feedback" v-if="errors.firstname">
+                    {{ errors.firstname }}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="lastname">Last Name: </label>
+                <input type="text" class="form-control" id="lastname" v-model="lastname" required />
+                <div class="invalid-feedback" v-if="errors.lastname">
+                    {{ errors.lastname }}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row text-center bottom-margin-sm">
-        <div class="col">
-            <label for="service">Choose your Service: </label>
-            <select v-model="service" v-on:change="modifyPrice">
-                <option v-for="option in serviceOptions" v-bind:value="option.value">
-                    {{ option.text }}
-                </option>
-            </select>
-        </div>
-        <div class="col">
-            <div>
-                <label for="price">Price: </label> <input type="text" id="price" v-model="price" readonly />
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="phonenumber">Phone Number: </label>
+                <input type="text" class="form-control" id="phonenumber" v-model="phonenumber" placeholder="(XXX) XXX-XXXX" pattern="/^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/" required />
+                <div class="invalid-feedback" v-if="errors.phonenumber">
+                    {{ errors.phonenumber }}
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="email">Email: </label>
+                <input type="email" class="form-control" id="email" v-model="email" placeholder="username@email.com" required />
+                <div class="invalid-feedback" v-if="errors.email">
+                    {{ errors.email }}
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="address">Address: </label>
+                <div class="input-group">
+                    <a id="geoClick" class="btn btn-outline-dark" v-on:click="getGeo">Auto-fill Address</a>
+                    <input type="text" class="form-control" id="address" v-model="address" required />
+                    <div class="invalid-feedback" v-if="errors.address">
+                        {{ errors.address }}
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="row text-center">
-        <div class="col">
-            <button id="submitrequest" class="btn btn-dark" v-on:click="submitRequest">Submit Request</button>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="service">Choose your Service: </label>
+                <select v-model="service" class="form-control" v-on:change="modifyPrice">
+                    <option v-for="(option, index) in serviceOptions" v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
+                </select>
+                <div class="invalid-feedback" v-if="errors.service">
+                    {{ errors.service }}
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="roomcount">Number of Rooms: </label>
+                <input type="number" class="form-control" min="1" v-model="roomcount" v-on:change="modifyPrice" id="roomcount" required />
+                <div class="invalid-feedback" v-if="errors.roomcount">
+                    {{ errors.roomcount }}
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="price">Price: </label>
+                <input type="text" class="form-control" id="price" v-model="price" readonly />
+            </div>
         </div>
-    </div>
+        <div class="row text-center">
+            <div class="col">
+                <button type="submit" id="submitrequest" class="btn btn-dark">Submit Request</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 
 @section Scripts
 {
-    <script>
+    <script type="text/javascript">
         var app = new Vue({
             el: "#app",
             data: {
                 // PLACE DATA PROPERTIES HERE
-                firstname: "",
-                lastname: "",
-                phonenumber: "",
-                email: "",
-                address: "",
-                price: "",
-                service: "",
+                firstname: null,
+                lastname: null,
+                phonenumber: null,
+                email: null,
+                address: null,
+                price: null,
+                service: null,
+                roomcount: 1,
                 serviceOptions: [],
                 servicePrices: [],
-                requests: []
+                requests: [],
+                errors: []
             },
             mounted: function () {
                 // PERFORM ANY ACTIONS WHEN THE PAGE LOADS HERE - SIMILAR TO JQUERY DOCUMENT.READY
+                (function () {
+                    'use strict';
+                    window.addEventListener('load', function () {
+                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                        var forms = document.getElementsByClassName('needs-validation');
+                        // Loop over them and prevent submission
+                        var validation = Array.prototype.filter.call(forms, function (form) {
+                            form.addEventListener('submit', function (event) {
+                                if (form.checkValidity() === false) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                }
+                                form.classList.add('was-validated');
+                            }, false);
+                        });
+                    }, false);
+                })();
+
                 $.ajax({
                     method: "GET",
                     url: "/api/Services",
@@ -83,14 +133,29 @@
                 }).done(function (data) {
                     $.each(data, function (index, item) {
                         app.serviceOptions.push({ text: item.serviceName, value: item.serviceId });
+                        if (index === 0)
+                            app.service = item.serviceId;
                         app.servicePrices[item.serviceId] = item.pricePerService;
                     });
+                    app.modifyPrice();
                 }).fail(function () {
                     console.log("requests did not get presented");
                 });
             },
             methods: {
                 // ADD ANY METHODS (CLICK, SUBMIT EVENTS, ETC.)
+                validateEmail: function (email) {
+                    const re = /^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    return re.test(email);
+                },
+                size: function (obj) {
+                    var size = 0,
+                        key;
+                    for (key in obj) {
+                        if (obj[key].length != 0) size++;
+                    }
+                    return size;
+                },
                 getGeo: function () {
                     var self = this;
                     navigator.geolocation.getCurrentPosition(function (location) {
@@ -117,9 +182,53 @@
                 modifyPrice: function () {
                     var self = this;
                     var value = this.service;
-                    app.price = app.servicePrices[value];
+                    app.price = app.servicePrices[value] * app.roomcount;
                 },
+                checkForm: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.errors = [];
+                    if (!this.firstname) {
+                        this.errors["firstname"] = "Firstname is required";
+                    }
 
+                    if (!this.lastname) {
+                        this.errors["lastname"] = "Lastname is required";
+                    }
+
+                    if (!this.phonenumber) {
+                        this.errors["phonenumber"] = "Phone number is required";
+                    } else if (!(/^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/.test(this.phonenumber))) {
+                        this.errors["phonenumber"] = "Please enter phonenumber in valid format (XXX) XXX-XXXX";
+                    }
+
+                    if (!this.email) {
+                        this.errors["email"] = "Email is required";
+                    } else if (!(this.validateEmail(this.email))) {
+                        this.errors["email"] = "Please enter valid Email";
+                    }
+
+                    if (!this.address) {
+                        this.errors["address"] = "Address is required";
+                    }
+
+                    if (!this.service) {
+                        this.errors["service"] = "Service is required";
+                    }
+
+                    if (!this.roomcount) {
+                        this.errors["roomcount"] = "Number of Rooms is required";
+                    } else if (this.roomcount <= 0) {
+                        this.errors["roomcount"] = "Number of Rooms should be positive number";
+                    }
+
+                    if (this.size(this.errors) > 0) {
+                        return false;
+                    }
+                    
+
+                    this.submitRequest();
+                },
                 submitRequest: function () {
                     data = {
                         firstname: app.firstname,
@@ -137,13 +246,8 @@
                         dataType: "JSON",
                         contentType: "application/json"
                     }).done(function (data) {
-                        app.firstname = "";
-                        app.lastname = "";
-                        app.phonenumber = "";
-                        app.email = "";
-                        app.address = "";
-                        app.price = "";
-                        app.service = "";
+                        $('form').trigger("reset");
+                        $('form').removeClass('was-validated');
                         $('#submitrequest').parent('.col').append('<div class="col" id="successMsg">Request submitted successfully!</div>');
                         $('#successMsg').fadeOut('xslow', function () {
                             $(this).remove();
