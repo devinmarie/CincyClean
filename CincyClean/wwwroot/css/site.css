@@ -104,9 +104,6 @@ h1, h2, h3, h4, h5, h6, p, button, a {
 h1 {
     color: #339966;
 }
-input {
-    margin-bottom: 25px;
-}
 
 @media (min-width: 901px) {
     .desktop {
