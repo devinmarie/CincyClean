@@ -55,14 +55,17 @@
         </div>
     </div>
     <form id="assignForm" style="display:none" class="text-center bottom-margin-lg" v-on:submit.prevent.stop="assignCleaner">
-        <h4>Assign Cleaner</h4>
-        <div class="form-group">
-            <label>Request</label>
-            <label id="assignCleanerRequestId"></label>
-            <label>Cleaner's Id</label>
-            <input type="number" v-model="assignCleanerForm.cleanerId" class="form-control" />
+        <h4>Assign Cleaner to Request</h4>
+        <div class="form-group bottom-margin-sm">
+            <label>Request # </label><label id="assignCleanerRequestId"></label>
+            <select v-model="assignedCleanerId">
+                <option v-for="option in cleanerOptions" v-bind:value="option.value">
+                    {{ option.text }}
+                </option>
+            </select>
         </div>
         <button type="submit" class="btn btn-dark">Assign Cleaner</button>
+        <button type="button" class="btn btn-outline-dark" v-on:click="hideAssignForm">Cancel</button>
     </form>
     <div id="assigned" class="text-center bottom-margin-sm">
         <div class="row">
@@ -71,7 +74,7 @@
             </div>
         </div>
         <div class="row">
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -92,10 +95,11 @@
             <div class="col">
                 <h4>Completed Requests</h4>
                 <h5 class="brandcolor" id="totalRequests"></h5>
+                <h5>Latest 5 Requests</h5>
             </div>
         </div>
         <div class="row desktop">
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -107,6 +111,9 @@
                 <tbody id="completerow">
                 </tbody>
             </table>
+        </div>
+        <div>
+            <a href="/Requests/Index" class="btn btn-outline-dark">See All Requests</a>
         </div>
         <div class="row mobile">
             <p>All requests can be viewed on desktop app.</p>
@@ -120,23 +127,20 @@
         var app = new Vue({
             el: "#app",
             data: {
-                // PLACE DATA PROPERTIES HERE
                 cleanerForm: false,
                 assignForm: false,
                 submitCleanerForm: {
                     cleanerName: ""
                 },
-                assignCleanerForm: {
-                    cleanerId: null
-                    //This has to be an integer in order to work.
-                },
+                assignedCleanerId: null,
                 requests: [],
                 requestskeyed: [],
                 services: [],
-                cleaners:[]
+                cleanerOptions: [],
+                cleaners: [],
+                assignedRequest: []
             },
             mounted: function () {
-                // PERFORM ANY ACTIONS WHEN THE PAGE LOADS HERE - SIMILAR TO JQUERY DOCUMENT.READY
                 var self = this;
                 $.ajax({
                     method: "GET",
@@ -159,6 +163,7 @@
                 }).done(function (data) {
                     $.each(data, function (index, item) {
                         self.cleaners[item.cleanerId] = item;
+                        app.cleanerOptions.push({ text: item.cleanerName, value: item.cleanerId });
                     });
                 }).fail(function () {
                     console.log("cleaners did not get presented");
@@ -189,8 +194,7 @@
 
                         if (item.cleanerId == null && item.isCompleted == false) {
                             var row = $("<tr unassignedrow-id='" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.phone + "</td><td>"
-                                + item.address + "</td><td>" + item.totalPrice + "</td><td>" +
-                                "<button assigncleaner-id ='" + item.requestId + "' class='btn btn-outline-dark assign-cleaner'>Assign</button>" +
+                                + item.address + "</td><td>" + item.totalPrice + "</td><td>" + "<button assigncleaner-id ='" + item.requestId + "' class='btn btn-outline-dark assign-cleaner'>Assign</button>" +
                                 "</td><td>" + "<a href='/Requests/Details?id=" + item.requestId + "' class='btn btn-default'>See Request</a>" + "</td></tr>");
                             $("#unassignedrow").append(row);
                         }
@@ -200,8 +204,8 @@
                                 cleanerName = app.cleaners[item.cleanerId].cleanerName
                             }
                             var row = $("<tr assignedrow-id='" + item.requestId + "'><td>" + item.firstName + " " + item.lastName + "</td><td>"
-                                + item.totalPrice + "</td><td>" + serviceName + "</td><td>" + cleanerName + "</td><td>"
-                                + "<button markcomplete-id ='" + item.requestId + "' class='btn btn-outline-dark mark-complete'>Complete</button>" + "</td></tr>");
+                                + item.totalPrice + "</td><td>" + serviceName + "</td><td>" + cleanerName + "</td><td>" + "<button markcomplete-id ='" + item.requestId +
+                                "' class='btn btn-outline-dark mark-complete'>Complete</button>" + "</td></tr>");
                             $("#assignedrow").append(row);
                         }
                         if (item.isCompleted == true) {
@@ -209,9 +213,10 @@
                             if (item.cleanerId in app.cleaners) {
                                 cleanerName = app.cleaners[item.cleanerId].cleanerName
                             }
-                            var row = $("<tr><td>" + item.firstName + " " + item.lastName + "</td><td>"
-                                + item.totalPrice + "</td><td>" + serviceName + "</td><td>" + cleanerName + "</td></tr>");
-                            $("#completerow").append(row);
+                            if (count < 5) {
+                                var row = $("<tr><td>" + item.firstName + " " + item.lastName + "</td><td>" + item.totalPrice + "</td><td>" + serviceName + "</td><td>" + cleanerName + "</td></tr>");
+                                $("#completerow").append(row);
+                            }
                             count = count + 1;
                             totalrequests = "Completed Total: " + count; 
                             $("#totalRequests").text(totalrequests);
@@ -225,7 +230,6 @@
                             singlerequest = app.requestskeyed[keyedId]
                         }
                         console.log(singlerequest);
-                        console.log(singlerequest.firstName);
                         var completeData = {
                             requestId: parseInt(id),
                             firstName: singlerequest.firstName,
@@ -256,13 +260,10 @@
                     $("#unassignedrow").on('click', 'button.assign-cleaner', function () {
                         var self = this;
                         var id = $(this).parents("tr").attr('unassignedrow-id');
-                        assignCleaner(id);
+                        $("#assignCleanerRequestId").text(id);
                         $("#assignForm").show();
                         return false;
                     });
-                };
-                function assignCleaner(id) {
-                    $("#assignCleanerRequestId").text(id);
                 };
             },
             methods: {
@@ -273,6 +274,9 @@
                 hideCleanerform: function () {
                     var self = this;
                     self.cleanerForm = false;
+                },
+                hideAssignForm: function () {
+                    $("#assignForm").hide();
                 },
                 submitCleaner: function () {
                     var self = this;
@@ -292,11 +296,26 @@
                 },
                 assignCleaner: function () {
                     var self = this;
-                    var data = {
-                        cleanerId: parseInt(self.assignCleanerForm.cleanerId)
-                    }
-                    var json = JSON.stringify(data);
                     var id = $("#assignCleanerRequestId").text();
+                    console.log(id);
+                    var keyedId = parseInt(id);
+                    if (keyedId in app.requestskeyed) {
+                        self.assignedRequest = app.requestskeyed[keyedId]
+                    }
+                    console.log(self.assignedRequest);
+                    var completeData = {
+                        requestId: parseInt(id),
+                        firstName: self.assignedRequest.firstName,
+                        lastName: self.assignedRequest.lastName,
+                        phone: self.assignedRequest.phone,
+                        email: self.assignedRequest.email,
+                        address: self.assignedRequest.address,
+                        isCompleted: self.assignedRequest.isCompleted,
+                        cleanerId: self.assignedCleanerId,
+                        totalPrice: self.assignedRequest.totalPrice,
+                        serviceId: self.assignedRequest.serviceId
+                    };
+                    var json = JSON.stringify(completeData);
                     $.ajax({
                         method: "PUT",
                         url: "api/Requests/" + id,
@@ -304,10 +323,10 @@
                         contentType: "application/json",
                         data: json
                     }).done(function (data) {
-                        console.log("Cleaner was submitted.");
-                        $("#assignForm").hide();
+                        console.log("Request marked complete.");
+                        location.reload(true);
                     }).fail(function () {
-                        console.log("Cleaner did not get posted.");
+                        console.log("Request could not be completed.");
                     });
                 }
             },
